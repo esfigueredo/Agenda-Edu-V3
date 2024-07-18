@@ -7,7 +7,7 @@
     },
     "scripts": {
         "start_dev": "ts-node-dev --inspect --transpile-only --ignore-watch node_modules src/index.ts",
-        "start_prod": "node dist/server/server.js",
+        "start_prod": "node dist/index.js",
         "test": "jest",
         "test:server": "jest src/tests/server.test.ts",
         "test:user": "jest src/tests/user.test.ts",
