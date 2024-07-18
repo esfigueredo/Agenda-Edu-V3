@@ -25,15 +25,15 @@ class ServerAPI {
         this.app.use(ErrorHandling.errorHandler); 
     };
 
-    // private listRoutes(): void {
-    //     RouteList.listRoutes(this.app._router, this.baseRoute);
-    // };
+    private listRoutes(): void {
+        RouteList.listRoutes(this.app._router, this.baseRoute);
+    };
 
     public start(port: number): void {
         this.serverInstance = this.app.listen(port, () => {
             console.log(' ');
             console.log(`🚀 Aplicação iniciada na rota: http://127.0.0.1:${port}`);
-            //this.listRoutes();
+            this.listRoutes();
         });
     };
 
