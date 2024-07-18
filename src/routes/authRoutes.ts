@@ -12,6 +12,7 @@ const authController = new AuthController(authService);
 router.post('/login', async (req: Request, res: Response, next: NextFunction) => {
     try {
         await authController.login(req, res, next);
+        console.log(req.body)
     } catch (error) {
         next(error);
     };
