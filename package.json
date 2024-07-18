@@ -7,7 +7,7 @@
     },
     "scripts": {
         "start_dev": "ts-node-dev --inspect --transpile-only --ignore-watch node_modules src/index.ts",
-        "start_prod":"node dist/server/server.js", 
+        "start_prod": "node dist/server/server.js",
         "test": "jest",
         "test:server": "jest src/tests/server.test.ts",
         "test:user": "jest src/tests/user.test.ts",
@@ -33,6 +33,7 @@
         "ts-jest": "^29.1.4",
         "ts-node": "^10.9.2",
         "ts-node-dev": "^2.0.0",
+        "tsup": "^8.1.2",
         "typescript": "^5.4.5"
     },
     "dependencies": {
