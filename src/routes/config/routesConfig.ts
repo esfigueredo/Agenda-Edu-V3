@@ -20,8 +20,23 @@ class RoutesConfig {
         this.configureRoutes();
     };
 
+    private async runMiddlewares(middlewares: Function[], req: Request, res: Response, next: NextFunction) {
+        for (const middleware of middlewares) {
+            await new Promise<void>((resolve, reject) => {
+                middleware(req, res, (err: any) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve();
+                    }
+                });
+            });
+        }
+        next();
+    }
+
     private configureRoutes(): void {
-        
+
         const registerMiddleware = [
             validateCPFMiddleware,
             transformData,
@@ -33,19 +48,19 @@ class RoutesConfig {
             validateEmail
         ];
 
-        this.router.use((req: Request, res: Response, next: NextFunction) => {
+        this.router.use(async (req: Request, res: Response, next: NextFunction) => {
             const currentRoute = req.baseUrl + req.path;
 
             if (currentRoute === `${this.baseRoute}/login` ||
                 currentRoute === `${this.baseRoute}/getToken` ||
                 currentRoute === `${this.baseRoute}/register`) {
                 if (currentRoute === `${this.baseRoute}/register`) {
-                    registerMiddleware.forEach(middleware => middleware(req, res, next));
+                    await this.runMiddlewares(registerMiddleware, req, res, next);
                 } else {
-                    validateEmailMiddleware.forEach(middleware => middleware(req, res, next));
+                    await this.runMiddlewares(validateEmailMiddleware, req, res, next);
                 }
             } else {
-                authMiddleware(req, res, () => {
+                authMiddleware(req, res, async () => {
                     const routePermissions = permissionsMap[req.path];
                     if (routePermissions) {
                         const methodPermissions = routePermissions[req.method];
@@ -60,6 +75,7 @@ class RoutesConfig {
                 });
             }
         });
+
         this.router.use(authRoutes);
         this.router.use(userRoutes);
         this.router.use(studentRoutes);
