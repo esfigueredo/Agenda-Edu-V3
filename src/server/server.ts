@@ -3,7 +3,7 @@ import { Application } from "express";
 import ServerConfig from "./serverConfig";
 import RoutesConfig from "../routes/config/routesConfig";
 import RouteList from "../routes/config/routeList";
-//import ErrorHandling from "../utils/errorHandling";
+import ErrorHandling from "../utils/errorHandling";
 class ServerAPI {
     private app: Application;
     private serverInstance: Server | null = null;
@@ -12,7 +12,7 @@ class ServerAPI {
     constructor() {
         this.app = new ServerConfig().getApp();
         this.setupRoutes();
-       //this.setupErrorHandling();
+       this.setupErrorHandling();
     };
 
     private setupRoutes(): void {
@@ -20,10 +20,10 @@ class ServerAPI {
         this.app.use(this.baseRoute, router);
     };
 
-    // private setupErrorHandling(): void {
-    //     this.app.use(ErrorHandling.notFoundHandler); 
-    //     this.app.use(ErrorHandling.errorHandler); 
-    // };
+    private setupErrorHandling(): void {
+        this.app.use(ErrorHandling.notFoundHandler); 
+        this.app.use(ErrorHandling.errorHandler); 
+    };
 
     private listRoutes(): void {
         RouteList.listRoutes(this.app._router, this.baseRoute);
