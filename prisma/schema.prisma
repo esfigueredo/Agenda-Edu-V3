@@ -1,0 +1,88 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  email     String    @unique
+  password  String
+  role      Role
+  student   Student[]
+  cpf       String    @unique
+  telefone1 String
+  telefone2 String?
+  telefone3 String?
+  brithDay  DateTime
+  address   Address?
+
+  @@index([id])
+}
+
+model Address {
+  id         String @id @default(auto()) @map("_id") @db.ObjectId
+  address    String
+  complement String
+  number     Int
+  cep        String
+  userId     String @unique @db.ObjectId
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+enum Role {
+  student
+  guardian
+  teacher
+  admin
+}
+
+model Student {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  cpf       String?  @unique
+  className String
+  turn      String
+  brithDay  DateTime
+  userId    String   @db.ObjectId
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+model messages {
+  id            String     @id @default(auto()) @map("_id") @db.ObjectId
+  messageDate   DateTime
+  referenceDate DateTime
+  title         String
+  role          Role
+  subjects      Subjects[]
+  className     String
+  body          String
+  type          typeMessages
+}
+
+enum Subjects {
+  Portuguese
+  Mathematics
+  Science
+  History
+  Geography
+  Physical_Education
+  Arts
+  English
+  Religious_Education
+  Technology
+  Music
+}
+
+enum typeMessages {
+  alert
+  warning
+  reminder
+  commemorative_date
+}
